@@ -1,0 +1,44 @@
+generator client {
+  provider = "prisma-client"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                    String        @id           @default(uuid())
+  name                  String
+  email                 String        @unique
+  imageUrl              String?
+  registrationNo        String        @unique
+  userRole              Role                        @default(STUDENT)
+  isEmailVerified       Boolean                     @default(false)
+  phoneNumber           String?
+  semester              String
+  department            String
+  gender                Gender                      
+
+
+  createdAt             DateTime                    @default(now())
+  updatedAt             DateTime                    @updatedAt
+}
+
+
+
+
+
+
+
+enum Role{
+  STUDENT,
+  TEACHER,
+  ADMIN
+}
+
+enum Gender{
+  MALE,
+  FEMALE,
+  OTHERS
+}
