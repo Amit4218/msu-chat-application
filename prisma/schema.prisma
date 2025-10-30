@@ -1,5 +1,5 @@
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -8,37 +8,62 @@ datasource db {
 }
 
 model User {
-  id                    String        @id           @default(uuid())
-  name                  String
-  email                 String        @unique
-  imageUrl              String?
-  registrationNo        String        @unique
-  userRole              Role                        @default(STUDENT)
-  isEmailVerified       Boolean                     @default(false)
-  phoneNumber           String?
-  semester              String
-  department            String
-  gender                Gender                      
+  id                          String      @id         @default(uuid())
+  name                        String
+  email                       String      @unique
+  imageUrl                    String?
+  registrationNo              String?     @unique
+  userRole                    Role                    @default(STUDENT)
+  isEmailVerified             Boolean                 @default(false)
+  phoneNumber                 String?
+  semester                    String?
+  department                  String?
+  gender                      Gender
+  createdAt                   DateTime                @default(now())
+  updatedAt                   DateTime                @updatedAt
 
-
-  createdAt             DateTime                    @default(now())
-  updatedAt             DateTime                    @updatedAt
+  // Relationships
+  messages        Messages[]
+  chatRooms       ChatRoom[]
 }
 
+model Messages {
+  id                          String      @id         @default(uuid())
+  message                     String
+  roomId                      String
+  senderId                    String
+  createdAt                   DateTime                @default(now())
+  updatedAt                   DateTime                @updatedAt
 
+  // Relationships
+  sender      User       @relation(fields: [senderId], references: [id])
+  chatRoom    ChatRoom   @relation(fields: [roomId], references: [id])
+}
 
+model ChatRoom {
+  id                          String      @id         @default(uuid())
+  roomName                    String
+  roomType                    RoomType                @default(SINGLE)
+  participants                User[]
+  messages                    Messages[]
+  createdAt                   DateTime                @default(now())
+  updatedAt                   DateTime                @updatedAt
+}
 
+enum RoomType {
+  GROUP
+  SINGLE
+}
 
-
-
-enum Role{
-  STUDENT,
-  TEACHER,
+enum Role {
+  STUDENT
+  STAFF
   ADMIN
 }
 
-enum Gender{
-  MALE,
-  FEMALE,
+enum Gender {
+  MALE
+  FEMALE
   OTHERS
 }
+
