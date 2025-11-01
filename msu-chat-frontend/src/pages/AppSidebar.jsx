@@ -25,8 +25,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { ChevronUp, Search } from "lucide-react";
 
-import ModeToggle from "./theme/ThemeToggle";
+import ModeToggle from "../components/theme/ThemeToggle";
 import ChatPage from "./ChatPage";
+import { Link, Outlet } from "react-router-dom";
 
 const AppSidebar = () => {
   const [chatUser, setChatUser] = useState("Start a chat");
@@ -98,24 +99,28 @@ const AppSidebar = () => {
               <SidebarGroupContent className="mt-4">
                 <SidebarMenu>
                   {filteredContacts.map((item) => (
-                    <SidebarMenuItem
-                      key={item.title}
-                      className="mb-3 border-b pb-3 cursor-pointer"
-                      onClick={() => selectChatUser(item.title, item.avatarUrl)}
-                    >
-                      <SidebarMenuButton asChild>
-                        <div className="flex items-center gap-3">
-                          <Avatar>
-                            <AvatarImage
-                              className="p-1 rounded-full"
-                              src={item.avatarUrl}
-                            />
-                            <AvatarFallback>U</AvatarFallback>
-                          </Avatar>
-                          <span>{item.title}</span>
-                        </div>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
+                    <Link to={'/chat'}>
+                      <SidebarMenuItem
+                        key={item.title}
+                        className="mb-3 border-b pb-3 cursor-pointer"
+                        onClick={() =>
+                          selectChatUser(item.title, item.avatarUrl)
+                        }
+                      >
+                        <SidebarMenuButton asChild>
+                          <div className="flex items-center gap-3">
+                            <Avatar>
+                              <AvatarImage
+                                className="p-1 rounded-full"
+                                src={item.avatarUrl}
+                              />
+                              <AvatarFallback>U</AvatarFallback>
+                            </Avatar>
+                            <span>{item.title}</span>
+                          </div>
+                        </SidebarMenuButton>
+                      </SidebarMenuItem>
+                    </Link>
                   ))}
                 </SidebarMenu>
               </SidebarGroupContent>
@@ -174,14 +179,14 @@ const AppSidebar = () => {
 
             <ModeToggle />
           </div>
-          { chatUser === "Start a chat" ? (
+          {chatUser === "Start a chat" ? (
             <div className="flex items-center justify-center h-full">
               <h2 className="text-2xl font-light text-gray-500">
                 Select a chat to start messaging
               </h2>
             </div>
           ) : (
-            <ChatPage chatUser={chatUser} userAvatar={userAvatar} />
+            <Outlet context={{ chatUser, userAvatar }} />
           )}
         </main>
       </div>

@@ -61,7 +61,7 @@ const ChatPage = (props) => {
           <input
             type="text"
             placeholder="Message"
-            className="w-full h-15 p-2 font-medium z-50 border-4"
+            className="w-full h-15 p-2 font-medium z-50 border-4 rounded-lg"
             ref={sentMessage}
           />
           <button
