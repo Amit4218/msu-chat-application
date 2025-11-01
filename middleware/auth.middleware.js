@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+import { JWT_SECRET } from "../utils/envProvide.js";
 
 const authTokenmiddleware = async (req, res, next) => {
   try {
@@ -8,7 +9,7 @@ const authTokenmiddleware = async (req, res, next) => {
       return res.status(401).json({ message: "Unauthorized" });
     }
 
-    const decodedUser = jwt.verify(token, process.env.JWT_SECRET);
+    const decodedUser = jwt.verify(token, JWT_SECRET);
 
     req.user = decodedUser;
 
