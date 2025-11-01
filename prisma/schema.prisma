@@ -20,7 +20,6 @@ model User {
   semester                    String?
   department                  String?
   gender                      Gender
-  jobRole                     String?
   status                      Status                  @default(AVAILABLE)
   createdAt                   DateTime                @default(now())
   updatedAt                   DateTime                @updatedAt
@@ -28,7 +27,7 @@ model User {
   // Relationships
   sentMessages                Messages[]              @relation("SentMessages")
   senderSingleChat            SingleChatRoom[]        @relation("UserSender")
-  receverSingleChat           SingleChatRoom[]        @relation("UserReceiver")
+  receiverSingleChat          SingleChatRoom[]        @relation("UserReceiver")
   groupChatRooms              GroupChatRoom[]         @relation("GroupParticipants")
   adminOfGroups               GroupChatRoom[]         @relation("GroupAdmin")
 }
@@ -37,6 +36,7 @@ model Messages {
   id                          String      @id         @default(uuid())
   message                     String
   roomId                      String
+  senderName                  String
   senderId                    String
   singleChatRoomId            String?
   groupChatRoomId             String?                    
@@ -44,25 +44,25 @@ model Messages {
   updatedAt                   DateTime                @updatedAt
 
   // Relationships
-  sender                      User                    @relation("SentMessages", fields: [senderId], references: [id])
-  singleChatRoom              SingleChatRoom?         @relation(fields: [singleChatRoomId], references: [id])
-  groupChatRoom               GroupChatRoom?          @relation(fields: [groupChatRoomId], references: [id])
+  sender                      User                    @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  singleChatRoom              SingleChatRoom?         @relation(fields: [singleChatRoomId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  groupChatRoom               GroupChatRoom?          @relation(fields: [groupChatRoomId], references: [id], onDelete: Cascade, onUpdate: Cascade)
 }
 
 model SingleChatRoom {
   id                          String      @id         @default(uuid())
   messages                    Messages[]
   senderId                    String
-  receverId                   String
-  blocked                     Boolean
+  receiverId                  String
+  blocked                     String?
 
   createdAt                   DateTime                @default(now())
   updatedAt                   DateTime                @updatedAt
 
   // Relationships
-  sender                      User                    @relation("UserSender", fields: [senderId], references: [id], onDelete: Cascade)
-  receiver                    User                    @relation("UserReceiver", fields: [receverId], references: [id], onDelete: Cascade)
-                                                      @@unique([senderId, receverId])
+  sender                      User                    @relation("UserSender", fields: [senderId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+  receiver                    User                    @relation("UserReceiver", fields: [receiverId], references: [id], onDelete: Cascade, onUpdate: Cascade)
+                                                      @@unique([senderId, receiverId])
 }
 
 model GroupChatRoom{
@@ -75,7 +75,7 @@ model GroupChatRoom{
 
   // Relationships
   participants                User[]                  @relation("GroupParticipants")
-  roomAdmin                   User                    @relation("GroupAdmin", fields: [roomAdminId], references: [id])
+  roomAdmin                   User                    @relation("GroupAdmin", fields: [roomAdminId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   messages                    Messages[]
 }
 
