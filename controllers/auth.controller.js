@@ -45,7 +45,7 @@ export const register = async (req, res) => {
         name,
         gender,
         department,
-        imageUrl,
+        imageUrl: `https://placehold.co/400?text=${name}&font=roboto`,
         phoneNumber,
         registrationNo,
         userRole,
