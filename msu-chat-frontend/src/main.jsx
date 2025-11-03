@@ -1,12 +1,11 @@
-import router from './router.jsx'
-import './index.css'
-import { ThemeProvider } from './components/theme/TheamProvider.jsx'
-import { RouterProvider } from 'react-router-dom'
-import {createRoot} from 'react-dom/client'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import "../src/index.css";
+import App from "./App";
 
-createRoot(document.getElementById('root')).render(
-  <ThemeProvider defaultTheme='system'>
-    <RouterProvider router={router}/>
-  </ThemeProvider>
-
-)
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
+  <React.StrictMode>
+      <App />
+  </React.StrictMode>
+);
