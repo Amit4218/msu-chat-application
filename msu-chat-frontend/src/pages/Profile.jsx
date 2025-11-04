@@ -1,29 +1,43 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
-import { Textarea } from '../components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '../components/ui/avatar';
-import { ArrowLeft, Camera, Save, User, Mail, Phone, GraduationCap, Briefcase } from 'lucide-react';
-import { toast } from '../hooks/use-toast';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import { Textarea } from "../components/ui/textarea";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "../components/ui/avatar";
+import {
+  ArrowLeft,
+  Camera,
+  Save,
+  User,
+  Mail,
+  Phone,
+  GraduationCap,
+  Briefcase,
+} from "lucide-react";
+import { toast } from "../hooks/use-toast";
 
 const Profile = () => {
   const navigate = useNavigate();
   const { currentUser, updateProfile } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const [formData, setFormData] = useState({
-    name: currentUser?.name || '',
-    bio: currentUser?.bio || '',
-    phone: currentUser?.phone || '',
-    semester: currentUser?.semester || '',
-    designation: currentUser?.designation || ''
+    name: currentUser?.name || "",
+    bio: currentUser?.bio || "",
+    phone: currentUser?.phone || "",
+    semester: currentUser?.semester || "",
+    designation: currentUser?.designation || "",
   });
 
   if (!currentUser) {
-    navigate('/login');
+    navigate("/login");
     return null;
   }
 
@@ -35,8 +49,8 @@ const Profile = () => {
     updateProfile(formData);
     setIsEditing(false);
     toast({
-      title: 'Profile updated!',
-      description: 'Your profile has been updated successfully'
+      title: "Profile updated!",
+      description: "Your profile has been updated successfully",
     });
   };
 
@@ -45,23 +59,27 @@ const Profile = () => {
       name: currentUser.name,
       bio: currentUser.bio,
       phone: currentUser.phone,
-      semester: currentUser.semester || '',
-      designation: currentUser.designation || ''
+      semester: currentUser.semester || "",
+      designation: currentUser.designation || "",
     });
     setIsEditing(false);
   };
 
-  const initials = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase();
+  const initials = currentUser.name
+    .split(" ")
+    .map((n) => n[0])
+    .join("")
+    .toUpperCase();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-teal-50 via-emerald-50 to-green-50">
+    <div className="min-h-screen bg-linear-to-br from-teal-50 via-emerald-50 to-green-50">
       {/* Header */}
-      <div className="bg-gradient-to-r from-teal-500 to-emerald-600 text-white px-4 py-4 shadow-lg">
+      <div className="bg-linear-to-r from-teal-500 to-emerald-600 text-white px-4 py-4 shadow-lg">
         <div className="max-w-4xl mx-auto flex items-center gap-4">
           <Button
             variant="ghost"
             size="sm"
-            onClick={() => navigate('/chat')}
+            onClick={() => navigate("/chat")}
             className="text-white hover:bg-white/20"
           >
             <ArrowLeft className="w-5 h-5 mr-2" />
@@ -74,11 +92,14 @@ const Profile = () => {
       {/* Profile Content */}
       <div className="max-w-4xl mx-auto p-4 md:p-8">
         <Card className="shadow-xl border-0">
-          <CardHeader className="bg-gradient-to-r from-teal-500 to-emerald-600 text-white rounded-t-lg">
+          <CardHeader className="bg-linear-to-r from-teal-500 to-emerald-600 text-white rounded-t-lg">
             <div className="flex flex-col items-center">
               <div className="relative group">
                 <Avatar className="w-32 h-32 border-4 border-white shadow-lg">
-                  <AvatarImage src={currentUser.avatar} alt={currentUser.name} />
+                  <AvatarImage
+                    src={currentUser.imageUrl}
+                    alt={currentUser.name}
+                  />
                   <AvatarFallback className="bg-white text-teal-600 text-4xl font-bold">
                     {initials}
                   </AvatarFallback>
@@ -90,7 +111,9 @@ const Profile = () => {
               <h2 className="text-2xl font-bold mt-4">{currentUser.name}</h2>
               <p className="text-teal-100">{currentUser.email}</p>
               <div className="mt-2 px-4 py-1 bg-white/20 rounded-full text-sm">
-                {currentUser.type === 'student' ? 'Student' : 'Staff Member'}
+                {currentUser.userRole.toLowerCase() === "student"
+                  ? "Student"
+                  : "Staff Member"}
               </div>
             </div>
           </CardHeader>
@@ -112,7 +135,7 @@ const Profile = () => {
                 />
               ) : (
                 <p className="text-gray-700 bg-gray-50 p-4 rounded-lg">
-                  {currentUser.bio || 'No bio added yet'}
+                  {currentUser.bio || "No bio added yet"}
                 </p>
               )}
             </div>
@@ -145,7 +168,7 @@ const Profile = () => {
                   />
                 ) : (
                   <Input
-                    value={currentUser.phone}
+                    value={currentUser.phoneNumber}
                     disabled
                     className="bg-gray-50"
                   />
@@ -154,27 +177,42 @@ const Profile = () => {
             </div>
 
             {/* Type-specific Information */}
-            {currentUser.type === 'student' ? (
-              <div className="space-y-2">
-                <Label className="flex items-center gap-2">
-                  <GraduationCap className="w-4 h-4 text-teal-600" />
-                  Semester
-                </Label>
-                {isEditing ? (
+            {currentUser.userRole.toLowerCase() === "student" ? (
+              <>
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2">
+                    <GraduationCap className="w-4 h-4 text-teal-600" />
+                    Semester
+                  </Label>
+                  {isEditing ? (
+                    <Input
+                      name="semester"
+                      value={formData.semester}
+                      onChange={handleChange}
+                      placeholder="e.g., 6th Semester"
+                    />
+                  ) : (
+                    <Input
+                      value={currentUser.semester}
+                      disabled
+                      className="bg-gray-50"
+                    />
+                  )}
+                </div>
+
+                <div className="space-y-2">
+                  <Label className="flex items-center gap-2">
+                    <GraduationCap className="w-4 h-4 text-teal-600" />
+                    Department
+                  </Label>
+
                   <Input
-                    name="semester"
-                    value={formData.semester}
-                    onChange={handleChange}
-                    placeholder="e.g., 6th Semester"
-                  />
-                ) : (
-                  <Input
-                    value={currentUser.semester}
+                    value={currentUser.department}
                     disabled
                     className="bg-gray-50"
                   />
-                )}
-              </div>
+                </div>
+              </>
             ) : (
               <div className="space-y-2">
                 <Label className="flex items-center gap-2">
@@ -190,7 +228,7 @@ const Profile = () => {
                   />
                 ) : (
                   <Input
-                    value={currentUser.designation}
+                    value={currentUser.department}
                     disabled
                     className="bg-gray-50"
                   />
@@ -211,7 +249,7 @@ const Profile = () => {
                   </Button>
                   <Button
                     onClick={handleSave}
-                    className="flex-1 bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white"
+                    className="flex-1 bg-linear-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white"
                   >
                     <Save className="w-4 h-4 mr-2" />
                     Save Changes
@@ -220,7 +258,7 @@ const Profile = () => {
               ) : (
                 <Button
                   onClick={() => setIsEditing(true)}
-                  className="w-full bg-gradient-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white"
+                  className="w-full bg-linear-to-r from-teal-500 to-emerald-600 hover:from-teal-600 hover:to-emerald-700 text-white"
                 >
                   Edit Profile
                 </Button>
@@ -232,17 +270,21 @@ const Profile = () => {
         {/* Additional Info */}
         <Card className="mt-6 shadow-lg border-0">
           <CardContent className="p-6">
-            <h3 className="font-semibold text-gray-900 mb-4">Account Information</h3>
+            <h3 className="font-semibold text-gray-900 mb-4">
+              Account Information
+            </h3>
             <div className="space-y-3 text-sm">
               <div className="flex justify-between">
                 <span className="text-gray-600">Account Type:</span>
                 <span className="font-medium text-gray-900">
-                  {currentUser.type === 'student' ? 'Student' : 'Staff'}
+                  {currentUser.userRole.toLowerCase() === "student"
+                    ? "Student"
+                    : "Staff"}
                 </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Email Verified:</span>
-                <span className="font-medium text-green-600">Yes (@college.edu)</span>
+                <span className="font-medium text-green-600">Yes</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600">Member Since:</span>

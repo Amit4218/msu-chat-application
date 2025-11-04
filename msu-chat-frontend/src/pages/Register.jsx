@@ -1,18 +1,38 @@
-import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
-import { Button } from '../components/ui/button';
-import { Input } from '../components/ui/input';
-import { Label } from '../components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '../components/ui/tabs';
-import { MessageSquare, Mail, Lock, Phone, User, GraduationCap, Briefcase, AlertCircle } from 'lucide-react';
-import { toast } from '../hooks/use-toast';
+import React, { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "../components/ui/card";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "../components/ui/tabs";
+import {
+  MessageSquare,
+  Mail,
+  Lock,
+  Phone,
+  User,
+  GraduationCap,
+  Briefcase,
+  AlertCircle,
+} from "lucide-react";
+import { toast } from "../hooks/use-toast";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 const Register = () => {
   const navigate = useNavigate();
   const { register } = useAuth();
-  const [userType, setUserType] = useState('student');
+  const [userType, setUserType] = useState("STUDENT");
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -24,57 +44,69 @@ const Register = () => {
     gender: "",
     designation: "",
   });
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
-    
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError('');
+    setError("");
   };
   const handleGenderChange = (value) => {
     // console.log(value);
-    
+
     setFormData({ ...formData, gender: value });
-    setError('');
-  }
+    setError("");
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError('');
+    setError("");
     setLoading(true);
     try {
-      const { name, email, password, phoneNumber, department, gender } = formData;
+      const { name, email, password, phoneNumber, department, gender } =
+        formData;
 
-      // console.log(gender)
-      if (!name || !email || !password || !phoneNumber || !department || !gender) {
-        throw new Error('Please fill in all required fields');
-        
+      if (
+        !name ||
+        !email ||
+        !password ||
+        !phoneNumber ||
+        !department ||
+        !gender
+      ) {
+        throw new Error("Please fill in all required fields");
       }
 
-      if (userType === 'student' && !formData.semester) {
-        throw new Error('Please select your semester');
+      if (userType === "STUDENT" && !formData.semester) {
+        throw new Error("Please select your semester");
       }
 
-      if (userType === 'staff' && !formData.designation) {
-        throw new Error('Please enter your designation');
+      if (userType === "STAFF" && !formData.designation) {
+        throw new Error("Please enter your designation");
       }
-      
+
       const userData = {
         name,
         email,
         password,
         phoneNumber,
+        gender,
+        department,
         type: userType,
-        ...(userType === 'student' ? { semester: formData.semester, registrationNo: formData.registrationNo } : { designation: formData.designation })
+        ...(userType === "STUDENT"
+          ? {
+              semester: formData.semester,
+              registrationNo: formData.registrationNo,
+            }
+          : { designation: formData.designation }),
       };
 
       register(userData);
       toast({
-        title: 'Registration successful!',
-        description: 'Welcome to CollegeChat'
+        title: "Registration successful!",
+        description: "Welcome to CollegeChat",
       });
-      navigate('/chat');
+      navigate("/chat");
     } catch (err) {
       setError(err.message);
     } finally {
@@ -108,13 +140,13 @@ const Register = () => {
             <Tabs value={userType} onValueChange={setUserType} className="mb-6">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger
-                  value="student"
+                  value="STUDENT"
                   className="flex items-center gap-2"
                 >
                   <GraduationCap className="w-4 h-4" />
                   Student
                 </TabsTrigger>
-                <TabsTrigger value="staff" className="flex items-center gap-2">
+                <TabsTrigger value="STAFF" className="flex items-center gap-2">
                   <Briefcase className="w-4 h-4" />
                   Staff
                 </TabsTrigger>
@@ -225,7 +257,7 @@ const Register = () => {
                 </div>
               </div>
 
-              {userType === "student" ? (
+              {userType === "STUDENT" ? (
                 <>
                   <div className="space-y-2">
                     <Label htmlFor="semester">

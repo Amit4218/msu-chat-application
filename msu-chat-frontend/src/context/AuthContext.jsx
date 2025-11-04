@@ -1,13 +1,36 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
-import { getCurrentUser, setCurrentUser as saveMockUser, clearCurrentUser } from '../mock';
-import { mockUsers } from '../mock';
+import React, { createContext, useContext, useState, useEffect } from "react";
+import {
+  getCurrentUser,
+  setCurrentUser as saveMockUser,
+  clearCurrentUser,
+} from "../mock";
+import { loginUser, logoutUser, registerUser } from "../api/authRequests";
 
 const AuthContext = createContext();
+
+// Uncomment when the mock.js file is deleted
+/*
+export const getCurrentUser = () => {
+  const stored = localStorage.getItem("user");
+  if (stored) {
+    return stored;
+  }
+  return null;
+};
+
+export const setCurrentUser = (user) => {
+  localStorage.setItem("user", user);
+};
+
+export const clearCurrentUser = () => {
+  localStorage.removeItem("user");
+};
+ */
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
-    throw new Error('useAuth must be used within AuthProvider');
+    throw new Error("useAuth must be used within AuthProvider");
   }
   return context;
 };
@@ -24,50 +47,35 @@ export const AuthProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  const login = (email, password) => {
-    // Mock login - in real app, this would call backend API
-    // For now, validate email domain and set mock user
-    if (!email.endsWith('@msu.edu.in')) {
-      throw new Error('Please use your college email address (@msu.edu.in)');
-    }
-
-    const mockUser = {
-      id: Date.now().toString(),
-      email,
-      name: email.split('@')[0].split('.').map(n => n.charAt(0).toUpperCase() + n.slice(1)).join(' '),
-      type: 'student',
-      semester: '6th Semester',
-      phone: '+1234567890',
-      bio: 'New to the platform!',
-      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${email}`
-    };
-
-    setCurrentUser(mockUser);
-    saveMockUser(mockUser);
-    return mockUser;
-  };
-
-  const register = (userData) => {
-    // Mock registration - validate college email
-    if (!userData.email.endsWith('@msu.edu.in')) {
+  const login = async (email, password) => {
+    if (!email.endsWith("@msu.edu.in")) {
       throw new Error("Please use your college email address (@msu.edu.in)");
     }
 
-    const newUser = {
-      id: Date.now().toString(),
-      ...userData,
-      avatar: `https://api.dicebear.com/7.x/avataaars/svg?seed=${userData.email}`,
-      bio: userData.bio || 'New to the platform!'
-    };
+    const user = await loginUser(email, password);
 
-    setCurrentUser(newUser);
-    saveMockUser(newUser);
-    return newUser;
+    setCurrentUser(user);
+    saveMockUser(user);
+    return user;
   };
 
-  const logout = () => {
+  const register = async (userData) => {
+    if (!userData.email.endsWith("@msu.edu.in")) {
+      throw new Error("Please use your college email address (@msu.edu.in)");
+    }
+
+    const message = await registerUser(userData);
+
+    return message;
+  };
+
+  const logout = async () => {
+    await logoutUser();
+
     setCurrentUser(null);
+    localStorage.removeItem("token");
     clearCurrentUser();
+    return;
   };
 
   const updateProfile = (updates) => {
@@ -76,13 +84,22 @@ export const AuthProvider = ({ children }) => {
     saveMockUser(updatedUser);
   };
 
+  const verifyOtp = async (otp) => {
+    const user = await verifyOtp(otp);
+
+    setCurrentUser(user);
+    saveMockUser(user);
+    return user;
+  };
+
   const value = {
     currentUser,
     login,
     register,
     logout,
     updateProfile,
-    loading
+    loading,
+    verifyOtp,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

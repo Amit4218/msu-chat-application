@@ -1,4 +1,4 @@
-import { TOTP_SECRET } from "./envProvide.js";
+import { TOTP_SECRET, NODE_ENV } from "./envProvide.js";
 import { TOTP } from "totp-generator";
 
 export const generateOtp = async (email) => {
@@ -22,6 +22,9 @@ export const verifyUserOtp = async (email, userOtp) => {
   let char = [".", "@"];
   let newEmail = email;
 
+  if (NODE_ENV == "DEVELOPMENT") {
+    return true;
+  }
   // Cleaning the email of special character
 
   for (let idx = 0; idx < Array.length + 1; idx++) {
