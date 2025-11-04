@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { mockConversations } from '../mock';
 import { Input } from './ui/input';
 import { Button } from './ui/button';
-import { Badge } from './ui/badge';
+// import { Badge } from './ui/badge';
 import { ScrollArea } from './ui/scroll-area';
 import { Search, Plus, Users } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';

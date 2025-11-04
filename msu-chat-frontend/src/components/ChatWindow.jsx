@@ -35,7 +35,7 @@ const ChatWindow = ({ conversation, onBack }) => {
 
   if (!conversation) {
     return (
-      <div className="flex-1 flex items-center justify-center bg-linear-to-br from-teal-50 via-emerald-50 to-green-50">
+      <div className="flex-1 h-screen flex items-center justify-center bg-linear-to-br from-teal-50 via-emerald-50 to-green-50">
         <div className="text-center">
           <div className="bg-linear-to-br from-teal-100 to-emerald-100 p-8 rounded-full inline-block mb-4">
             <Users className="w-16 h-16 text-teal-600" />

@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { getCurrentUser, setCurrentUser as saveMockUser, clearCurrentUser } from '../mock';
+import { mockUsers } from '../mock';
 
 const AuthContext = createContext();
 
@@ -26,8 +27,8 @@ export const AuthProvider = ({ children }) => {
   const login = (email, password) => {
     // Mock login - in real app, this would call backend API
     // For now, validate email domain and set mock user
-    if (!email.endsWith('@college.edu')) {
-      throw new Error('Please use your college email address (@college.edu)');
+    if (!email.endsWith('@msu.edu.in')) {
+      throw new Error('Please use your college email address (@msu.edu.in)');
     }
 
     const mockUser = {
@@ -48,8 +49,8 @@ export const AuthProvider = ({ children }) => {
 
   const register = (userData) => {
     // Mock registration - validate college email
-    if (!userData.email.endsWith('@college.edu')) {
-      throw new Error('Please use your college email address (@college.edu)');
+    if (!userData.email.endsWith('@msu.edu.in')) {
+      throw new Error("Please use your college email address (@msu.edu.in)");
     }
 
     const newUser = {
