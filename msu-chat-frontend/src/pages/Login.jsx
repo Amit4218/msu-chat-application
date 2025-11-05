@@ -131,7 +131,7 @@ const Login = () => {
         </Card>
 
         <p className="text-center text-xs text-gray-500 mt-6">
-          Use your college email (@college.edu) to access the platform
+          Use your college email (@msu.edu.in) to access the platform
         </p>
       </div>
     </div>

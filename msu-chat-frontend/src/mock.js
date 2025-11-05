@@ -53,6 +53,8 @@ export const mockUsers = [
   }
 ];
 
+
+
 export const mockConversations = [
   {
     id: 'conv1',
