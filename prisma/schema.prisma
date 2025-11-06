@@ -11,6 +11,8 @@ model User {
   id                          String      @id         @default(uuid())
   name                        String
   email                       String      @unique
+  password                    String
+  designation                 String?                 @default("N/A")
   imageUrl                    String?
   registrationNo              String?     @unique
   bio                         String?

@@ -46,24 +46,32 @@ const Register = () => {
     designation: "",
   });
   const [error, setError] = useState("");
+  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
     setError("");
+    setError("");
   };
   const handleGenderChange = (value) => {
     // console.log(value);
 
+
     setFormData({ ...formData, gender: value });
+    setError("");
+  };
     setError("");
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setError("");
     setLoading(true);
     try {
+      const { name, email, password, phoneNumber, department, gender } =
+        formData;
       const { name, email, password, phoneNumber, department, gender } =
         formData;
 
@@ -87,11 +95,14 @@ const Register = () => {
         throw new Error("Please enter your designation");
       }
 
+
       const userData = {
         name,
         email,
         password,
         phoneNumber,
+        gender,
+        department,
         type: userType,
         ...(userType === "student"
           ? {
@@ -137,13 +148,13 @@ const Register = () => {
             <Tabs value={userType} onValueChange={setUserType} className="mb-6">
               <TabsList className="grid w-full grid-cols-2">
                 <TabsTrigger
-                  value="student"
+                  value="STUDENT"
                   className="flex items-center gap-2"
                 >
                   <GraduationCap className="w-4 h-4" />
                   Student
                 </TabsTrigger>
-                <TabsTrigger value="staff" className="flex items-center gap-2">
+                <TabsTrigger value="STAFF" className="flex items-center gap-2">
                   <Briefcase className="w-4 h-4" />
                   Staff
                 </TabsTrigger>
@@ -254,7 +265,7 @@ const Register = () => {
                 </div>
               </div>
 
-              {userType === "student" ? (
+              {userType === "STUDENT" ? (
                 <>
                   <div className="space-y-2">
                     <Label htmlFor="semester">
@@ -342,3 +353,4 @@ const Register = () => {
 };
 
 export default Register;
+

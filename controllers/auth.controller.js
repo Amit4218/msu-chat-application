@@ -1,20 +1,12 @@
 import prisma from "../lib/prisma.js";
 import { JWT_SECRET, NODE_ENV } from "../utils/envProvide.js";
 import { sendOtpEmail } from "../utils/emailService.js";
-import { registerSchema } from "../utils/authDataValidation.js";
 import { generateOtp, verifyUserOtp } from "../utils/generateAndVerifyOtp.js";
 import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
 export const register = async (req, res) => {
   try {
-    const parsed = registerSchema.safeParse(req.body);
-
-    if (!parsed.success) {
-      return res.status(400).json({
-        message: parsed.error,
-      });
-    }
-
     const {
       name,
       email,
@@ -24,8 +16,9 @@ export const register = async (req, res) => {
       department,
       gender,
       userRole,
-      imageUrl,
-    } = parsed.data;
+      password,
+      degsination,
+    } = req.body;
 
     const existingUser = await prisma.user.findUnique({
       where: {
@@ -39,30 +32,33 @@ export const register = async (req, res) => {
       });
     }
 
-    const user = await prisma.user.create({
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await prisma.user.create({
       data: {
         email,
         name,
         gender,
+        password: hashedPassword,
         department,
         imageUrl: `https://placehold.co/400?text=${name}&font=roboto`,
         phoneNumber,
         registrationNo,
         userRole,
         semester,
+        degsination,
       },
     });
 
-    // Generate an otp
-    const otp = await generateOtp(email);
-
-    console.log(`Generated otp register: ${otp}`);
-
-    // Send a otp to their email
-
-    NODE_ENV == "DEVELOPMENT"
-      ? console.log("Email has been sent")
-      : sendOtpEmail(email);
+    if (NODE_ENV == "DEVELOPMENT") {
+      console.log("otp: 000000");
+      console.log("Email has been sent");
+    } else {
+      // Generate an otp
+      const otp = await generateOtp(email);
+      // Send a otp to their email
+      await sendOtpEmail(email, otp);
+    }
 
     return res.status(201).json({
       message: "user registered successfully",
@@ -77,7 +73,7 @@ export const register = async (req, res) => {
 
 export const login = async (req, res) => {
   try {
-    const { email } = req.body;
+    const { email, password } = req.body;
 
     const user = await prisma.user.findUnique({
       where: {
@@ -91,19 +87,28 @@ export const login = async (req, res) => {
       });
     }
 
-    // Generate an otp
-    const otp = await generateOtp(email);
+    // compare password hash
 
-    console.log(`Generated otp login: ${otp}`);
+    const hashedPassword = await bcrypt.compare(password, user.password);
 
-    // Send a otp to their email
+    if (!hashedPassword) {
+      return res.status(409).json({
+        message: "invalid credientials!",
+      });
+    }
 
-    NODE_ENV == "DEVELOPMENT"
-      ? console.log("Email has been sent")
-      : sendOtpEmail(email);
+    // removing the password feild before returning the user in response
+
+    const { password: _, ...cleanUser } = user;
+
+    const token = jwt.sign({ email: user.email, id: user.id }, JWT_SECRET, {
+      expiresIn: "30d",
+    });
 
     return res.status(200).json({
-      message: "email sent successfully",
+      message: "logged in successfully",
+      user: cleanUser,
+      token: token,
     });
   } catch (error) {
     return res.status(500).json({
