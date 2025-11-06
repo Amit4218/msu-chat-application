@@ -200,7 +200,7 @@ export const getCurrentUser = () => {
   if (stored) {
     return JSON.parse(stored);
   }
-  return;
+  return mockUsers[0]; // Default to first mock user
 };
 
 export const setCurrentUser = (user) => {

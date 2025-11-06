@@ -50,9 +50,8 @@ const Register = () => {
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-    setError("");
-    setError("");
   };
+
   const handleGenderChange = (value) => {
     // console.log(value);
 
@@ -60,13 +59,10 @@ const Register = () => {
     setFormData({ ...formData, gender: value });
     setError("");
   };
-    setError("");
-  };
+    
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setError("");
-    setError("");
     setLoading(true);
     try {
       const { name, email, password, phoneNumber, department, gender } =
@@ -104,9 +100,9 @@ const Register = () => {
         type: userType,
         ...(userType === "student"
           ? {
-              semester: formData.semester,
-              registrationNo: formData.registrationNo,
-            }
+            semester: formData.semester,
+            registrationNo: formData.registrationNo,
+          }
           : { designation: formData.designation }),
       };
 
@@ -349,6 +345,6 @@ const Register = () => {
     </div>
   );
 
-
+}
 export default Register;
 
