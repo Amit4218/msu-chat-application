@@ -46,7 +46,6 @@ const Register = () => {
     designation: "",
   });
   const [error, setError] = useState("");
-  const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
@@ -72,8 +71,7 @@ const Register = () => {
     try {
       const { name, email, password, phoneNumber, department, gender } =
         formData;
-      const { name, email, password, phoneNumber, department, gender } =
-        formData;
+   
 
       // console.log(gender)
       if (
@@ -350,7 +348,7 @@ const Register = () => {
       </div>
     </div>
   );
-};
+
 
 export default Register;
 
