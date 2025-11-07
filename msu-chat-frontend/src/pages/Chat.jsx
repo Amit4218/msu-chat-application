@@ -50,7 +50,7 @@ const Chat = () => {
   return (
     <div className="h-screen flex flex-col bg-white">
       {/* Top Navigation Bar */}
-      <div className="bg-gradient-to-r from-teal-500 to-emerald-600 text-white px-4 py-3 shadow-lg">
+      <div className="bg-linear-to-r from-teal-500 to-emerald-600 text-white px-4 py-3 shadow-lg">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="bg-white/20 p-2 rounded-lg">

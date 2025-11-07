@@ -6,6 +6,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Chat from './pages/Chat';
 import Profile from './pages/Profile';
+import OtpPage from './pages/OtpPage';
 
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path="/chat" element={<Chat />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/" element={<Navigate to="/login" replace />} />
+          <Route path="/register/otp" element={<OtpPage />} />
         </Routes>
         <Toaster />
       </BrowserRouter>

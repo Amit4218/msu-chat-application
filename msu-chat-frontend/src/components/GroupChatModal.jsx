@@ -12,6 +12,7 @@ import { toast } from '../hooks/use-toast';
 
 const GroupChatModal = ({ isOpen, onClose }) => {
   const [groupName, setGroupName] = useState('');
+  const [groupDescription, setGroupDescription] = useState('');
   const [selectedMembers, setSelectedMembers] = useState([]);
 
   const toggleMember = (userId) => {
@@ -72,6 +73,16 @@ const GroupChatModal = ({ isOpen, onClose }) => {
               placeholder="Enter group name"
               value={groupName}
               onChange={(e) => setGroupName(e.target.value)}
+            />
+          </div>
+          <div className="space-y-2">
+            <Label htmlFor="groupName">Group Description</Label>
+            <Input
+              className ="h-15"
+              id="groupName"
+              placeholder="Enter group name"
+              value={groupName}
+              onChange={(e) => setGroupDescription(e.target.value)}
             />
           </div>
 

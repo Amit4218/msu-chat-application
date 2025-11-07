@@ -13,6 +13,7 @@ const ChatWindow = ({ conversation, onBack }) => {
   const [messages, setMessages] = useState([]);
   const scrollAreaRef = useRef(null);
 
+  
   useEffect(() => {
     if (conversation) {
       // Load messages for this conversation from mock data
@@ -46,11 +47,11 @@ const ChatWindow = ({ conversation, onBack }) => {
       </div>
     );
   }
-
+  
   const displayName = conversation.type === 'group' ? conversation.name : conversation.participant.name;
   const displayAvatar = conversation.type === 'group' ? conversation.avatar : conversation.participant.avatar;
   const initials = displayName.split(' ').map(n => n[0]).join('').toUpperCase();
-
+  
   const formatMessageTime = (timestamp) => {
     return new Date(timestamp).toLocaleTimeString('en-US', { 
       hour: 'numeric', 
@@ -58,6 +59,9 @@ const ChatWindow = ({ conversation, onBack }) => {
       hour12: true 
     });
   };
+  
+ 
+
 
   return (
     <div className="flex-1 flex flex-col bg-gray-50 h-full">
@@ -74,21 +78,24 @@ const ChatWindow = ({ conversation, onBack }) => {
               <ArrowLeft className="w-5 h-5" />
             </Button>
             <Avatar className="w-10 h-10">
-              <AvatarImage src={displayAvatar} alt={displayName} />
+              <AvatarImage
+                /*showAvtarProfile*/ src={displayAvatar}
+                alt={displayName}
+              />
               <AvatarFallback className="bg-linear-to-br from-teal-400 to-emerald-500 text-white">
                 {initials}
               </AvatarFallback>
             </Avatar>
             <div>
               <h3 className="font-semibold text-gray-900">{displayName}</h3>
-              {conversation.type === 'group' ? (
+              {conversation.type === "group" ? (
                 <p className="text-xs text-gray-500">
                   {conversation.participants.length} members
                 </p>
               ) : (
                 <p className="text-xs text-gray-500">
-                  {conversation.participant.type === 'student' 
-                    ? conversation.participant.semester 
+                  {conversation.participant.type === "student"
+                    ? conversation.participant.semester
                     : conversation.participant.designation}
                 </p>
               )}
@@ -96,13 +103,25 @@ const ChatWindow = ({ conversation, onBack }) => {
           </div>
 
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="sm" className="text-gray-600 hover:text-teal-600">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-gray-600 hover:text-teal-600"
+            >
               <Phone className="w-5 h-5" />
             </Button>
-            <Button variant="ghost" size="sm" className="text-gray-600 hover:text-teal-600">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-gray-600 hover:text-teal-600"
+            >
               <Video className="w-5 h-5" />
             </Button>
-            <Button variant="ghost" size="sm" className="text-gray-600 hover:text-teal-600">
+            <Button
+              variant="ghost"
+              size="sm"
+              className="text-gray-600 hover:text-teal-600"
+            >
               <MoreVertical className="w-5 h-5" />
             </Button>
           </div>
@@ -114,10 +133,10 @@ const ChatWindow = ({ conversation, onBack }) => {
         <div className="space-y-4 max-w-4xl mx-auto">
           {messages.map((message, index) => {
             const isCurrentUser = message.senderId === currentUser.id;
-            const showAvatar = !isCurrentUser && (
-              index === messages.length - 1 || 
-              messages[index + 1]?.senderId !== message.senderId
-            );
+            const showAvatar =
+              !isCurrentUser &&
+              (index === messages.length - 1 ||
+                messages[index + 1]?.senderId !== message.senderId);
 
             return (
               <div
