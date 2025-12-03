@@ -232,3 +232,26 @@ export const blockUserFromChat = async (roomId, status, userId) => {
     throw new Error("Failed to block user");
   }
 };
+
+export const updateUserProfile = async (req, res) => {
+  try {
+    const { name, bio, phone, semester, designation } = req.body;
+
+    const user = await prisma.user.update({
+      where: { id: req.user.id },
+      data: { name, bio, phoneNumber: phone, semester, designation },
+    });
+
+    const { password: _, ...updatedUser } = user;
+
+    return res.status(200).json({
+      message: "User profile updated successfully",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error("Error updating user profile: ", error.message);
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};

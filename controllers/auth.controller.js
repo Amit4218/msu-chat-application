@@ -140,19 +140,35 @@ export const verifyOtp = async (req, res) => {
         },
       });
 
+      const { password: _, ...cleanUser } = user;
+
       const token = jwt.sign({ email: user.email, id: user.id }, JWT_SECRET, {
         expiresIn: "30d",
       });
 
       return res.status(200).json({
         message: "otp matched",
-        user: user,
+        user: cleanUser,
         token: token,
       });
     }
 
     return res.status(403).json({
       message: "otp do not match",
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const logout = async (req, res) => {
+  try {
+    // TODO: make the session of the user then logout
+
+    return res.status(200).json({
+      message: "user logged out successfull",
     });
   } catch (error) {
     return res.status(500).json({
