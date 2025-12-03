@@ -15,7 +15,7 @@ router.post("/create-group-chatRoom", createGroupChatRoom);
 
 router.get("/get-chatRooms", getChatRooms);
 
-router.get("/messages", getUserChatRoomMessages);
+router.get("/messages/:id", getUserChatRoomMessages);
 
 router.put("/update-profile", updateUserProfile);
 
