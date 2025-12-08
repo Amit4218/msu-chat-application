@@ -46,7 +46,7 @@ export const register = async (req, res) => {
         registrationNo,
         userRole,
         semester,
-        degsination,
+        designation: degsination,
       },
     });
 
@@ -75,7 +75,7 @@ export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findFirstOrThrow({
       where: {
         email,
       },

@@ -17,7 +17,7 @@ const port = PORT;
 const server = createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: [`${FRONTEND_BASE_URL}`],
+    origin: [`${FRONTEND_BASE_URL}`, "*"],
   },
 });
 
@@ -48,7 +48,7 @@ io.on("connection", (socket) => {
 });
 
 app.use(express.json());
-app.use(cors({ origin: [`${FRONTEND_BASE_URL}`] }));
+app.use(cors({ origin: [`${FRONTEND_BASE_URL}`, "*"] }));
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/user", authTokenmiddleware, userRoutes);
