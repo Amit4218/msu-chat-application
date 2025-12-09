@@ -12,4 +12,6 @@ export const FRONTEND_BASE_URL = process.env.FRONTEND_BASE_URL;
 
 export const TOTP_SECRET = process.env.TOTP_SECRET;
 
+export const RESEND_API_KEY = process.env.RESEND_API_KEY;
+
 export const NODE_ENV = process.env.NODE_ENV;

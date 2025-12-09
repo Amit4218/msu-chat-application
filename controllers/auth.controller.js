@@ -57,7 +57,7 @@ export const register = async (req, res) => {
       // Generate an otp
       const otp = await generateOtp(email);
       // Send a otp to their email
-      await sendOtpEmail(email, otp);
+      await sendOtpEmail(name, email, otp);
     }
 
     return res.status(201).json({
