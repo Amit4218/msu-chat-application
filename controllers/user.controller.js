@@ -163,11 +163,6 @@ export const getUserChatRoomMessages = async (req, res) => {
     const chatRoomMessages = await prisma.messages.findMany({
       where: {
         roomId: roomId,
-        AND: {
-          singleChatRoom: {
-            blocked: false,
-          },
-        },
       },
     });
 

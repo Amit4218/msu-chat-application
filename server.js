@@ -32,6 +32,7 @@ io.on("connection", (socket) => {
   });
 
   socket.on("block", ({ roomId, status, userId }) => {
+    console.log(roomId, status, userId);
     blockUserFromChat(roomId, status, userId); // fn to block & unblock the user depending on status
     io.to(roomId).emit("block", { status: status, userId: userId });
   });
