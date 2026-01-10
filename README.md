@@ -100,6 +100,17 @@
 - message: "chatRoom fetched successfull",
 - userChatRooms: list of all the user single & group chatrooms
 
+`GET: /user/find/:email || registrationNo || phoneNo: searches for the user`
+
+##### Data expected:
+
+- No DATA is excepted
+
+##### Returns
+
+- message: "user found",
+- user: necessary details to create a room.
+
 `GET: /user/messages/:id: fetches all the messages from selected chatroom`
 
 ##### Data expected:
@@ -169,6 +180,16 @@
 ```javaScript
   socket.on("typing", (roomId) => {
     io.to(roomId).emit("typing", "typing...");
+  });
+```
+
+- `event: stopTyping: indicates the user has stoped typing`
+
+- `params: roomId // id of the current selected room`
+
+```javaScript
+  socket.on("stopTyping", ({ roomId }) => {
+    io.to(roomId).emit("stopTyping", { roomId });
   });
 ```
 
