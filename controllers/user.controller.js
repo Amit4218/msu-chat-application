@@ -163,6 +163,11 @@ export const getUserChatRoomMessages = async (req, res) => {
     const chatRoomMessages = await prisma.messages.findMany({
       where: {
         roomId: roomId,
+        AND: {
+          singleChatRoom: {
+            blocked: false,
+          },
+        },
       },
     });
 
@@ -285,11 +290,11 @@ export const blockUserFromChat = async (roomId, status, userId) => {
 
 export const updateUserProfile = async (req, res) => {
   try {
-    const { name, bio, phone, semester, designation } = req.body;
+    const { bio, phone } = req.body;
 
     const user = await prisma.user.update({
       where: { id: req.user.id },
-      data: { name, bio, phoneNumber: phone, semester, designation },
+      data: { bio, phoneNumber: phone },
     });
 
     const { password: _, ...updatedUser } = user;
