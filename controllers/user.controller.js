@@ -167,8 +167,58 @@ export const getUserChatRoomMessages = async (req, res) => {
     });
 
     return res.status(200).json({
-      message: "chatRoom fetched successfull",
+      message: "chatRoom messages fetched successfull",
       chatRoomMessages: chatRoomMessages,
+    });
+  } catch (error) {
+    return res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+export const findNewUserFromSearch = async (req, res) => {
+  try {
+    const search = req.params.search;
+    const userId = req.user.id;
+
+    const user = await prisma.user.findFirst({
+      where: {
+        OR: [
+          {
+            email: search,
+          },
+          {
+            registrationNo: search,
+          },
+          {
+            phoneNumber: search,
+          },
+        ],
+      },
+      select: {
+        id: true,
+        email: true,
+        imageUrl: true,
+        name: true,
+        bio: true,
+      },
+    });
+
+    if (!user) {
+      return res.status(404).json({
+        message: "user not found!",
+      });
+    }
+
+    if (userId == user.id) {
+      return res.status(400).json({
+        message: "cannot serach yourself",
+      });
+    }
+    return res.status(200).json({
+      messsage: "user found",
+      User: user,
     });
   } catch (error) {
     return res.status(500).json({
