@@ -248,7 +248,7 @@ export const saveUserChatMessage = async (
       },
     });
 
-    if (checkIfUserIsBlocked.blocked === true) {
+    if (checkIfUserIsBlocked.blocked != null) {
       return;
     }
 
