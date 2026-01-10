@@ -239,6 +239,19 @@ export const saveUserChatMessage = async (
   senderName
 ) => {
   try {
+    const checkIfUserIsBlocked = await prisma.singleChatRoom.findFirst({
+      where: {
+        id: roomId,
+      },
+      select: {
+        blocked: true,
+      },
+    });
+
+    if (checkIfUserIsBlocked.blocked === true) {
+      return;
+    }
+
     await prisma.messages.create({
       data: {
         message,
