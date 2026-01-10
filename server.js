@@ -23,14 +23,12 @@ const io = new Server(server, {
 
 io.on("connection", (socket) => {
   socket.on("joinRoom", ({ roomId }) => {
-    console.log("new user joined");
-
     socket.join(roomId);
   });
 
-  socket.on("message", ({ roomId, message, senderId, senderName }) => {
+  socket.on("message", ({ roomId, message, senderId, senderName,timeStamp }) => {
     saveUserChatMessage(roomId, message, senderId, senderName); // fn to save the user sent message
-    io.to(roomId).emit("message", { roomId, message, senderId, senderName });
+    io.to(roomId).emit("message", { roomId, message, senderId, senderName, timeStamp });
   });
 
   socket.on("block", ({ roomId, status, userId }) => {
@@ -42,9 +40,11 @@ io.on("connection", (socket) => {
     io.to(roomId).emit("typing", "typing...");
   });
 
-  socket.on("disconnect", () => {
-    console.log("User disconnected:", socket.id);
+  socket.on("stopTyping", ({ roomId }) => {
+    io.to(roomId).emit("stopTyping", { roomId });
   });
+
+  socket.on("disconnect", () => {})
 });
 
 app.use(express.json());
