@@ -268,7 +268,7 @@ export const blockUserFromChat = async (roomId, status, userId) => {
     // block the user
 
     if (status) {
-      await prisma.singleChatRoom.update({
+      const blockedUser = await prisma.singleChatRoom.update({
         where: {
           id: roomId,
         },
@@ -276,6 +276,8 @@ export const blockUserFromChat = async (roomId, status, userId) => {
           blocked: userId,
         },
       });
+
+      return blockedUser.blocked;
     }
 
     // unblock the user
