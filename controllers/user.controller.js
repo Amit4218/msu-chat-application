@@ -277,12 +277,12 @@ export const blockUserFromChat = async (roomId, status, userId) => {
         },
       });
 
-      return blockedUser.blocked;
+       return blockedUser.blocked;
     }
 
     // unblock the user
 
-    await prisma.singleChatRoom.update({
+    const unblockedUser = await prisma.singleChatRoom.update({
       where: {
         id: roomId,
       },
@@ -291,7 +291,7 @@ export const blockUserFromChat = async (roomId, status, userId) => {
       },
     });
 
-    return;
+    return unblockedUser.blocked || null;
   } catch (error) {
     console.log(error.message);
     throw new Error("Failed to block user");

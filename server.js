@@ -31,9 +31,8 @@ io.on("connection", (socket) => {
     io.to(roomId).emit("message", { roomId, message, senderId, senderName, timeStamp });
   });
 
-  socket.on("block", ({ roomId, status, userId }) => {
-    console.log(roomId, status, userId);
-    const blockedUser = blockUserFromChat(roomId, status, userId); // fn to block & unblock the user depending on status
+  socket.on("block", async({ roomId, status, userId }) => {
+    const blockedUser = await blockUserFromChat(roomId, status, userId); // fn to block & unblock the user depending on status
     io.to(roomId).emit("block", { status: status, userId: blockedUser });
   });
 
